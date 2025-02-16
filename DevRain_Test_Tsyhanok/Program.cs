@@ -2,6 +2,7 @@
 using DevRain_Test_Tsyhanok.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
 namespace DevRain_Test_Tsyhanok;
 
@@ -23,9 +24,9 @@ public class DevRain_Test_Tsyhanok
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             var serviceProvider = serviceCollection.BuildServiceProvider();
-
+            Console.WriteLine("Starting application...");
             var appService = serviceProvider.GetRequiredService<IAppService>();
-            await appService.RunAsync().ConfigureAwait(false);
+            await appService.RunAsync();
         }
         catch (Exception ex)
         {
@@ -37,16 +38,21 @@ public class DevRain_Test_Tsyhanok
     {
         var builder = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
+                optional: true, reloadOnChange: true);
         configuration = builder.Build();
     }
 
     private static void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<IConfiguration>(configuration);
+        services.AddHttpClient();
         services.AddTransient<IFileReader, TextFileReader>();
         services.AddTransient<IFileLoaderService, FileLoaderService>();
         services.AddTransient<IDocumentIngestionService, DocumentIngestionService>();
+        services.AddTransient<IHttpRequestService, HttpRequestService>();
+        services.AddTransient<IAzureOpenAIService, AzureOpenAIService>();
         services.AddTransient<IAppService, AppService>();
     }
 }

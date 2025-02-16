@@ -2,5 +2,5 @@
 
 public interface IDocumentIngestionService
 {
-    Task<Dictionary<string, float[]>> IngestDocumentsAsync(Dictionary<string, string> documentContent);
+    Task<Dictionary<string, double[]>> IngestDocumentsAsync(Dictionary<string, string> documentContent);
 }

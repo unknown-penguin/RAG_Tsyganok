@@ -2,5 +2,5 @@
 
 public interface IAzureOpenAIService
 {
-    
+    Task<double[]> GenerateEmbeddingsAsync(string inputText);
 }
