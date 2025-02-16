@@ -1,9 +1,52 @@
-﻿namespace DevRain_Test_Tsyhanok;
+﻿using DevRain_Test_Tsyhanok.Interfaces;
+using DevRain_Test_Tsyhanok.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace DevRain_Test_Tsyhanok;
 
 public class DevRain_Test_Tsyhanok
 {
-    public static void Main(string[] args)
+    private static IConfiguration configuration;
+
+    public static async Task Main(string[] args)
     {
-        
+        try
+        {
+            LoadConfiguration();
+            if (configuration == null)
+            {
+                Console.Error.WriteLine("Configuration not loaded.");
+                return;
+            }
+
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+
+            var appService = serviceProvider.GetRequiredService<IAppService>();
+            await appService.RunAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+        }
+    }
+
+    private static void LoadConfiguration()
+    {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        configuration = builder.Build();
+    }
+
+    private static void ConfigureServices(IServiceCollection services)
+    {
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddTransient<IFileReader, TextFileReader>();
+        services.AddTransient<IFileLoaderService, FileLoaderService>();
+        services.AddTransient<IDocumentIngestionService, DocumentIngestionService>();
+        services.AddTransient<IAppService, AppService>();
     }
 }
