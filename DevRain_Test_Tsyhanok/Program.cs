@@ -54,5 +54,8 @@ public class DevRain_Test_Tsyhanok
         services.AddTransient<IHttpRequestService, HttpRequestService>();
         services.AddTransient<IAzureOpenAIService, AzureOpenAIService>();
         services.AddTransient<IAppService, AppService>();
+        services.AddTransient<IUserQuestionHandlerService, UserQuestionHandlerService>();
+        services.AddTransient<IDocumentRetrievalService, DocumentRetrievalService>();
+        services.AddTransient<IPromptBuilder, PromptBuilder>();
     }
 }
