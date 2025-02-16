@@ -1,13 +1,20 @@
-RAG Tsyhanok
-Overview
-This project is a C# application that reads text files, processes them, and interacts with Azure OpenAI services. 
-Prerequisites
-.NET 9.0 SDK 
-Azure OpenAI account and API key
-Configuration files (appsettings.json)
-Configuration
-appsettings.json: This file contains configuration settings for the application. Update the following fields with your specific values:
+# RAG Tsyhanok
 
+## Overview
+
+This project is a C# application that reads text files, processes them, and interacts with Azure OpenAI services.
+
+## Prerequisites
+
+- .NET 9.0 SDK
+- Azure OpenAI account and API key
+- Configuration files (appsettings.json)
+
+## Configuration
+
+The `appsettings.json` file contains configuration settings for the application. Update the following fields with your specific values:
+
+```json
 {
   "Documents": {
     "FolderPath": "insert-here-path-to-files"
